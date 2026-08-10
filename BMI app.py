@@ -10,7 +10,7 @@ if st.button("คํานวณค่า BMI🔄"):
   bmi = weight / (height_m ** 2)
   st.write("--")
   st.header(f"ค่า BMI ของคุณคือ: **{bmi:.2f}**")
-  if.bmi < 18.5:
+  if bmi < 18.5:
     st.warning("💡คุณมีนั้าหนักน้อยกว่าเกณฑ์ (ผอม)")
     elif.18.5 <= bmi < 23.0:
       st.success("🚨คุณมีนั้าหนักในเกณฑ์ปกติ (สุขภาพดี)")
