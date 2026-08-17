@@ -12,6 +12,12 @@ if "ans1_val" not in st.session_state:
 if "ans2_val" not in st.session_state:
     st.session_state.ans2_val = ""
 
+if "ans3_val" not in st.session_state:
+    st.session_state.ans3_val = ""
+
+if "ans4_val" not in st.session_state:
+    st.session_state.ans4_val = ""
+
 if "start" not in st.session_state:
     st.session_state.start = None
 
@@ -25,6 +31,9 @@ if "is_ended" not in st.session_state:
 def reset_game():
     st.session_state.ans1_val = ""
     st.session_state.ans2_val = ""
+    st.session_state.ans3_val = ""
+    st.session_state.ans4_val = ""
+
     st.session_state.start = time.time()
     st.session_state.is_ended = False
 
@@ -33,39 +42,54 @@ def reset_game():
 # 3. ฟังก์ชันแสดงผลคะแนน
 # ----------------------------------------------------
 @st.dialog("📊 สรุปผลการเล่นเกม")
-def show_result_dialog(ans1, ans2):
+def show_result_dialog(ans1, ans2, ans3, ans4):
+
     st.balloons()
 
     score = 0
 
     u_ans1 = ans1.strip().lower()
     u_ans2 = ans2.strip().lower()
+    u_ans3 = ans3.strip().lower()
+    u_ans4 = ans4.strip().lower()
 
-    # ตรวจข้อ 1
+    # ข้อ 1
     if u_ans1 == "apple":
         st.success("✅ ข้อ 1: ถูกต้อง")
         score += 1
     else:
-        st.error(
-            f"❌ ข้อ 1: ยังไม่ถูกต้อง (คุณตอบ '{u_ans1}')"
-        )
+        st.error(f"❌ ข้อ 1: ผิด — คุณตอบ '{u_ans1}'")
 
-    # ตรวจข้อ 2
+    # ข้อ 2
     if u_ans2 == "fish":
         st.success("✅ ข้อ 2: ถูกต้อง")
         score += 1
     else:
-        st.error(
-            f"❌ ข้อ 2: ยังไม่ถูกต้อง (คุณตอบ '{u_ans2}')"
-        )
+        st.error(f"❌ ข้อ 2: ผิด — คุณตอบ '{u_ans2}'")
 
-    # แสดงคะแนน
-    st.info(f"🏆 ได้คะแนนรวม: {score} / 2 คะแนน")
-
-    if score == 2:
-        st.success("🎉 You win!")
+    # ข้อ 3
+    if u_ans3 == "book":
+        st.success("✅ ข้อ 3: ถูกต้อง")
+        score += 1
     else:
-        st.error("💀 You lose!")
+        st.error(f"❌ ข้อ 3: ผิด — คุณตอบ '{u_ans3}'")
+
+    # ข้อ 4
+    if u_ans4 == "school":
+        st.success("✅ ข้อ 4: ถูกต้อง")
+        score += 1
+    else:
+        st.error(f"❌ ข้อ 4: ผิด — คุณตอบ '{u_ans4}'")
+
+    # คะแนนรวม
+    st.info(f"🏆 ได้คะแนนรวม: {score} / 4 คะแนน")
+
+    if score == 4:
+        st.success("🎉 You win! เก่งมาก!")
+    elif score >= 2:
+        st.warning("👍 Almost there! พยายามอีกนิด")
+    else:
+        st.error("💀 You lose! ลองใหม่อีกครั้ง")
 
 
 # ----------------------------------------------------
@@ -102,6 +126,7 @@ st.divider()
 # ----------------------------------------------------
 # 6. ช่องเติมคำศัพท์
 # ----------------------------------------------------
+
 ans1 = st.text_input(
     "ข้อ 1: An `a _ _ l e` a day keeps the doctor away. 🍎",
     value=st.session_state.ans1_val
@@ -112,12 +137,24 @@ ans2 = st.text_input(
     value=st.session_state.ans2_val
 )
 
+ans3 = st.text_input(
+    "ข้อ 3: I read a `b _ _ k` every night. 📖",
+    value=st.session_state.ans3_val
+)
+
+ans4 = st.text_input(
+    "ข้อ 4: I go to `s _ h _ _ l` every day. 🏫",
+    value=st.session_state.ans4_val
+)
+
 
 # ----------------------------------------------------
-# 7. บันทึกคำตอบ
+# 7. บันทึกคำตอบล่าสุด
 # ----------------------------------------------------
 st.session_state.ans1_val = ans1
 st.session_state.ans2_val = ans2
+st.session_state.ans3_val = ans3
+st.session_state.ans4_val = ans4
 
 
 # ----------------------------------------------------
@@ -133,19 +170,21 @@ if (
         st.session_state.is_ended = True
         st.rerun()
 
-    # ทำให้เวลานับถอยหลัง
+    # อัปเดตหน้าจอทุก 1 วินาที
     time.sleep(1)
     st.rerun()
 
 
 # ----------------------------------------------------
-# 9. แสดง Dialog ผลลัพธ์
+# 9. แสดง Dialog เมื่อจบเกม
 # ----------------------------------------------------
 if st.session_state.is_ended:
 
     show_result_dialog(
-        st.session_state.ans1_val,
-        st.session_state.ans2_val
+        ans1,
+        ans2,
+        ans3,
+        ans4
     )
 
 
@@ -154,4 +193,4 @@ if st.session_state.is_ended:
 # ----------------------------------------------------
 st.divider()
 
-st.write("นางสาวดีใจ ยิ้มแย้ม เลขที่ 5 ม.4/5")
+st.write("👩‍🎓 นายจ้าวพิภพ พานิชกุล เลขที่ 43 ม.4/5")
